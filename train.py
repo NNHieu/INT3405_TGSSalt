@@ -3,14 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pytorch_lightning as pl
 from argparse import ArgumentParser
-from utils import calculate_mAP
+from utils import calculate_mAP, str2bool
 from model import *
 
 class LitUNet(pl.LightningModule):
-    def __init__(self, **kwargs):
+    def __init__(self, bilinear, **kwargs):
         super().__init__()
         self.save_hyperparameters()
-        self.model = UNet(1, 1, bilinear=True)
+        self.model = UNet(1, 1, bilinear=bilinear)
         
     def forward(self, images):
         return self.model(images)
@@ -63,7 +63,9 @@ class LitUNet(pl.LightningModule):
         
     @staticmethod
     def add_model_specific_args(parent_parser):
-        parser = ArgumentParser(parents=[parent_parser], add_help=False)
+        parser = ArgumentParser(parents=[parent_parser], add_help=False) 
+        parser.add_argument("--bilinear", type=str2bool, 
+                            help="Use bilinear for up sampling.")
         parser.add_argument('--lr', type=float)
         parser.add_argument('--momentum', type=float, default=0.9)
         parser.add_argument('--weight_decay', type=float, default=5e-4)
