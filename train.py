@@ -11,7 +11,10 @@ class LitUNet(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
 #         self.model = UNet(1, 1, bilinear=bilinear)
-        self.model = AttUNet(1, 1, bilinear=bilinear)
+#         self.model = AttUNet(1, 1, bilinear=bilinear)
+        self.model = GAttUNet(1, 1, CAttUp, bilinear=bilinear)
+
+
         
     def forward(self, images):
         return self.model(images)

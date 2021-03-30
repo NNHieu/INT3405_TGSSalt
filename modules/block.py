@@ -30,11 +30,13 @@ class Attention_block(nn.Module):
         
         self.relu = nn.ReLU(inplace=True)
         
-    def forward(self,g,x):
+    def forward(self,g,x, att_out=False):
         g1 = self.W_g(g)
         x1 = self.W_x(x)
         psi = self.relu(g1+x1)
         psi = self.psi(psi)
+        if att_out:
+            return x*psi, psi
         return x*psi
     
 
@@ -57,5 +59,3 @@ class CALayer(nn.Module):
         y = self.avg_pool(x)
         y = self.conv_du(y)
         return x * y
-
-    
