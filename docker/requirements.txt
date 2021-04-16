@@ -1,0 +1,16 @@
+jupyterlab
+ipywidgets
+
+numpy
+pandas
+# opencv-python
+
+pytorch-lightning
+
+#EDA
+seaborn
+matplotlib
+
+#Augmentation
+albumentations
+

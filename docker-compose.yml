@@ -4,7 +4,7 @@ services:
   gpu:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
       args:
         buildno: 1 
     image: hine/pytorch:latest
