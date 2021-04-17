@@ -1,4 +1,8 @@
 import torch
+import pandas as pd
+import os
+import cv2
+import numpy as np
 
 def add_depth_channels(image_tensor):
     _, h, w = image_tensor.size()
@@ -44,3 +48,20 @@ def collate_classify_fn(batch):
     return images, masks
     # loss_weights = torch.clamp(conv2d(masks, disk, padding=1), 0, 1) + torch.clamp(conv2d((1 - masks), disk, padding=1), 0, 1)
     # return images, masks, loss_weights
+
+def generate_fold(root_ds, n_fold, outpath):
+    depths = pd.read_csv(os.path.join(root_ds, 'depths.csv'))
+    depths.sort_values('z', inplace=True)
+    # depths.drop('z', axis=1, inplace=True)
+    depths['fold'] = (list(range(n_fold)) * depths.shape[0])[:depths.shape[0]]
+    df_train = pd.read_csv(os.path.join(root_ds, 'train.csv'))
+
+    df_train = df_train.merge(depths)
+
+    dist = []
+    for id in df_train.id.values:
+        img = cv2.imread(os.path.join(root_ds, 'train', 'images', '{}.png'.format(id)), cv2.IMREAD_GRAYSCALE)
+        dist.append(np.unique(img).shape[0])
+    df_train['unique_pixels'] = dist
+
+    df_train[['id', 'z', 'fold', 'unique_pixels']].sample(frac=1, random_state=123).to_csv(outpath, index=False)

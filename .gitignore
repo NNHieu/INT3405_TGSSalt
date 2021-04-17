@@ -2,3 +2,5 @@ ckpt/
 /dataset
 .ipynb_checkpoints/
 __pycache__/
+/params/*
+!/params/.gitkeep

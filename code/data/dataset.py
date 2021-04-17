@@ -25,11 +25,11 @@ class TGSSaltDataset(VisionDataset):
             transforms: Optional[Callable] = None,) -> None:
         super(TGSSaltDataset, self).__init__(root, transform=transform, target_transform=target_transform, transforms=transforms)
         self.image_set = image_set
+        self.df = df
+        # self.df = pd.merge( self.df, pd.read_csv(os.path.join(self.root, 'depths.csv')) , left_on='id', right_on='id', how='inner')
+        # depths = self.df['z']
+        # self.df['z'] = (depths - depths.min()) / (depths.max() - depths.min())
         if image_set == 'train':
-            self.df = df
-            self.df = pd.merge( self.df, pd.read_csv(os.path.join(self.root, 'depths.csv')) , left_on='id', right_on='id', how='inner')
-            depths = self.df['z']
-            self.df['z'] = (depths - depths.min()) / (depths.max() - depths.min())
             self.image_ids = self.df['id']
             self.image_path = os.path.join(self.root, 'train')
         elif image_set == 'test':
