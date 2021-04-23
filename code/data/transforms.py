@@ -1,8 +1,8 @@
 from typing import Any, Callable, Optional
 from torchvision.datasets import VisionDataset, VOCDetection
+from torchvision.transforms.functional import to_tensor
 from torch.utils.data import Dataset
 import os
-from torchvision.transforms.functional import to_tensor, hflip, vflip, resize
 import pandas as pd
 from PIL import Image
 import glob
@@ -11,9 +11,11 @@ from torch.nn.functional import conv2d
 import random
 import numpy as np
 import cv2
+from .functional import add_depth_channels
 
 # main lib for augmentation
 import albumentations as A
+import imgaug.augmenters as iaa
 
 class HShear(A.DualTransform):
     """Transform for segmentation task."""
@@ -64,23 +66,38 @@ class TGSTransform:
         Params:
             augment - bool: perform augmentation if True
     """
-    def __init__(self, augment, use_depth=False, image_orig_size=(101, 101)):
-        self.augment = augment
-        self.use_depth = use_depth
+    def __init__(self, augment_strategy, add_depth=False, image_orig_size=(101, 101), resize_pad=False):
+        self.add_depth = add_depth
         # Define our augmentation pipeline.
-        if augment:
-            self.augtrans = A.Compose([
-                A.HorizontalFlip(p=0.5),
-                A.OneOf([
-                    A.RandomResizedCrop(width=image_orig_size[0], height=image_orig_size[1], p=1.0),
-                    HShear((-0.07, 0.07), p=1.0),
-                    A.Rotate(limit=(0, 15), p=1.0),
-                ], p=0.5),
-                A.RandomBrightnessContrast(brightness_limit=0.1, p=0.5)
-            ])
-        else:
+
+        if augment_strategy == 0:
             self.augtrans = A.NoOp()
-        self.alb_trans = A.Compose([self.augtrans, A.Resize(128, 128)])
+        elif augment_strategy == 1:
+            self.augtrans = A.HorizontalFlip(p=0.5)
+        elif augment_strategy == 2:
+            self.augtrans = A.augmentations.transforms.Flip(p=0.5)
+        else:
+            raise ValueError()
+
+        # self.augtrans = A.Compose([
+        #     A.HorizontalFlip(p=0.5),
+        #     A.OneOf([
+        #         A.RandomResizedCrop(width=image_orig_size[0], height=image_orig_size[1], p=1.0),
+        #         HShear((-0.07, 0.07), p=1.0),
+        #         A.Rotate(limit=(0, 15), p=1.0),
+        #     ], p=0.5),
+        #     A.OneOf([
+        #         # A.augmentations.transforms.MultiplicativeNoise((1 - 0.08, 1 + 0.08), p=0.5),
+        #         # A.augmentations.transforms.Add
+        #     ]),
+        #     A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.08, p=0.5)
+        # ])
+        if resize_pad:
+            self.alb_trans = A.Compose([self.augtrans, 
+                                        A.Resize(202, 202), 
+                                        A.PadIfNeeded(256, 256, border_mode=cv2.BORDER_CONSTANT, value=0, mask_value=0)])
+        else:
+            self.alb_trans = A.Compose([self.augtrans, A.Resize(128, 128)])
         
     def __call__(self, image, target, depth):
         """
@@ -96,13 +113,19 @@ class TGSTransform:
         # image = resize(image, (128, 128))
         # target = resize(target, (128, 128))\
         image = np.array(image)
-        target = np.array(target)
-        augmented = self.alb_trans(image=image, mask=target)
+        if target is not None:
+            target = np.array(target)
+            augmented = self.alb_trans(image=image, mask=target) 
+        else:
+            augmented = self.alb_trans(image=image) 
         image = to_tensor(augmented['image'])
-        target = to_tensor(augmented['mask'])
+        if self.add_depth:
+            image = add_depth_channels(image)
+        if target is not None:
+            target = to_tensor(augmented['mask'])
+        return image, target
         # Add depth channel
         # image = add_depth_channels(image)
-        return image, target
 
 
 class NetherlandsF3Transform:

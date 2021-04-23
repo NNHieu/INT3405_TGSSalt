@@ -10,10 +10,6 @@ import torch
 from torch.nn.functional import conv2d
 import random
 import numpy as np
-import imgaug as ia
-import imgaug.augmenters as iaa
-from imgaug.augmentables.segmaps import SegmentationMapsOnImage
-
 
 class TGSSaltDataset(VisionDataset):
     def __init__(self, 
@@ -43,6 +39,8 @@ class TGSSaltDataset(VisionDataset):
             target = Image.open(os.path.join(self.image_path, 'masks', self.image_ids[index] + '.png')).convert('L')
         if self.transforms is not None:
             img, target = self.transforms(img, target, self.df.loc[index]['z'])
+        if target is None:
+            return img
         return img, target
     
     def __len__(self) -> int:

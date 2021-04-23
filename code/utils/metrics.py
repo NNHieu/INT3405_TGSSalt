@@ -40,7 +40,7 @@ def cal_mAP(predict,truth, threshold=0.5):
     # return precision, result, threshold
     return precision
 
-def cal_mIoU(masks, preds, threshold_range=(0.5, 1, 0.05)):
+def cal_mIoU(masks, preds, threshold_range=(0.5, 1, 0.05), reduce_batch=True):
     """
     Params:
         masks [bs, 1, W, H]
@@ -58,5 +58,8 @@ def cal_mIoU(masks, preds, threshold_range=(0.5, 1, 0.05)):
         U = torch.logical_or(t, p)
         iou = (torch.sum(I, dim=[-1, -2]) + 1e-10) / (torch.sum(U, dim=[-1, -2]) + 1e-10)
         iou = iou.squeeze()
-        metric.append(torch.mean(iou))
-    return torch.mean(torch.FloatTensor(metric))
+        if reduce_batch:
+            metric.append(torch.mean(iou))
+        else:
+            metric.append(iou)
+    return torch.mean(torch.stack(metric, dim=0), dim=0)

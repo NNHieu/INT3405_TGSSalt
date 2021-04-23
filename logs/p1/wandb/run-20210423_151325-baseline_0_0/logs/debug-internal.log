@@ -1,0 +1,43 @@
+2021-04-23 15:13:26,294 INFO    MainThread:776945 [internal.py:wandb_internal():88] W&B internal server running at pid: 776945, started at: 2021-04-23 15:13:26.293861
+2021-04-23 15:13:26,295 DEBUG   HandlerThread:776945 [handler.py:handle_request():120] handle_request: check_version
+2021-04-23 15:13:26,295 INFO    WriterThread:776945 [datastore.py:open_for_write():77] open: ../logs/p1/wandb/run-20210423_151325-baseline_0_0/run-baseline_0_0.wandb
+2021-04-23 15:13:26,297 DEBUG   SenderThread:776945 [sender.py:send():160] send: header
+2021-04-23 15:13:26,297 DEBUG   SenderThread:776945 [sender.py:send():160] send: request
+2021-04-23 15:13:26,297 DEBUG   SenderThread:776945 [sender.py:send_request():169] send_request: check_version
+2021-04-23 15:13:26,492 DEBUG   SenderThread:776945 [sender.py:send():160] send: run
+2021-04-23 15:13:26,498 INFO    SenderThread:776945 [sender.py:_maybe_setup_resume():350] checking resume status for hiue/TGS_Salt_2/baseline_0_0
+2021-04-23 15:13:27,385 ERROR   SenderThread:776945 [internal_api.py:execute():127] 409 response executing GraphQL.
+2021-04-23 15:13:27,386 ERROR   SenderThread:776945 [internal_api.py:execute():128] {"errors":[{"message":"Error 1062: Duplicate entry '287638-baseline_0_0' for key 'PRIMARY'","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2021-04-23 15:13:28,883 ERROR   SenderThread:776945 [internal_api.py:execute():127] 409 response executing GraphQL.
+2021-04-23 15:13:28,884 ERROR   SenderThread:776945 [internal_api.py:execute():128] {"errors":[{"message":"Error 1062: Duplicate entry '287638-baseline_0_0' for key 'PRIMARY'","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2021-04-23 15:13:31,684 ERROR   SenderThread:776945 [internal_api.py:execute():127] 409 response executing GraphQL.
+2021-04-23 15:13:31,685 ERROR   SenderThread:776945 [internal_api.py:execute():128] {"errors":[{"message":"Error 1062: Duplicate entry '287638-baseline_0_0' for key 'PRIMARY'","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2021-04-23 15:13:31,685 ERROR   SenderThread:776945 [retry.py:__call__():111] Retry attempt failed:
+Traceback (most recent call last):
+  File "/home/user/.local/lib/python3.8/site-packages/wandb/old/retry.py", line 96, in __call__
+    result = self._call_fn(*args, **kwargs)
+  File "/home/user/.local/lib/python3.8/site-packages/wandb/sdk/internal/internal_api.py", line 130, in execute
+    six.reraise(*sys.exc_info())
+  File "/home/user/.local/lib/python3.8/site-packages/six.py", line 703, in reraise
+    raise value
+  File "/home/user/.local/lib/python3.8/site-packages/wandb/sdk/internal/internal_api.py", line 124, in execute
+    return self.client.execute(*args, **kwargs)
+  File "/home/user/.local/lib/python3.8/site-packages/wandb/vendor/gql-0.2.0/gql/client.py", line 52, in execute
+    result = self._get_result(document, *args, **kwargs)
+  File "/home/user/.local/lib/python3.8/site-packages/wandb/vendor/gql-0.2.0/gql/client.py", line 60, in _get_result
+    return self.transport.execute(document, *args, **kwargs)
+  File "/home/user/.local/lib/python3.8/site-packages/wandb/vendor/gql-0.2.0/gql/transport/requests.py", line 39, in execute
+    request.raise_for_status()
+  File "/home/user/.local/lib/python3.8/site-packages/requests/models.py", line 943, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 409 Client Error: Conflict for url: https://api.wandb.ai/graphql
+2021-04-23 15:13:36,343 ERROR   SenderThread:776945 [internal_api.py:execute():127] 409 response executing GraphQL.
+2021-04-23 15:13:36,344 ERROR   SenderThread:776945 [internal_api.py:execute():128] {"errors":[{"message":"Error 1062: Duplicate entry '287638-baseline_0_0' for key 'PRIMARY'","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2021-04-23 15:13:45,278 ERROR   SenderThread:776945 [internal_api.py:execute():127] 409 response executing GraphQL.
+2021-04-23 15:13:45,278 ERROR   SenderThread:776945 [internal_api.py:execute():128] {"errors":[{"message":"Error 1062: Duplicate entry '287638-baseline_0_0' for key 'PRIMARY'","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2021-04-23 15:13:56,492 DEBUG   HandlerThread:776945 [handler.py:handle_request():120] handle_request: shutdown
+2021-04-23 15:13:56,492 INFO    HandlerThread:776945 [handler.py:finish():624] shutting down handler
+2021-04-23 15:13:56,498 INFO    WriterThread:776945 [datastore.py:close():258] close: ../logs/p1/wandb/run-20210423_151325-baseline_0_0/run-baseline_0_0.wandb
+2021-04-23 15:14:05,343 ERROR   SenderThread:776945 [internal_api.py:execute():127] 409 response executing GraphQL.
+2021-04-23 15:14:05,344 ERROR   SenderThread:776945 [internal_api.py:execute():128] {"errors":[{"message":"Error 1062: Duplicate entry '287638-baseline_0_0' for key 'PRIMARY'","path":["upsertBucket"]}],"data":{"upsertBucket":null}}
+2021-04-23 15:14:07,657 INFO    MainThread:776945 [internal.py:handle_exit():78] Internal process exited

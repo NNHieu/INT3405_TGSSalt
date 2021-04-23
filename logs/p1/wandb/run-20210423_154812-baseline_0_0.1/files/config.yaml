@@ -1,0 +1,264 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.27
+    framework: lightning
+    is_jupyter_run: true
+    is_kaggle_kernel: false
+    m:
+    - 1: trainer/global_step
+      6:
+      - 3
+    - 1: Loss/train
+      5: 1
+      6:
+      - 1
+    - 1: epoch
+      5: 1
+      6:
+      - 1
+    - 1: Loss/val
+      5: 1
+      6:
+      - 1
+    - 1: Metrics/precision
+      5: 1
+      6:
+      - 1
+    python_version: 3.8.6
+    t:
+      1:
+      - 1
+      - 9
+      4: 3.8.6
+      5: 0.10.27
+      8:
+      - 1
+      - 5
+accelerator:
+  desc: null
+  value: None
+accumulate_grad_batches:
+  desc: null
+  value: 1
+add_depth:
+  desc: null
+  value: false
+amp_backend:
+  desc: null
+  value: native
+amp_level:
+  desc: null
+  value: O2
+augment_strategy:
+  desc: null
+  value: 2
+auto_lr_find:
+  desc: null
+  value: false
+auto_scale_batch_size:
+  desc: null
+  value: false
+auto_select_gpus:
+  desc: null
+  value: false
+automatic_optimization:
+  desc: null
+  value: None
+batch_size:
+  desc: null
+  value: 16
+benchmark:
+  desc: null
+  value: false
+check_val_every_n_epoch:
+  desc: null
+  value: 1
+checkpoint_callback:
+  desc: null
+  value: true
+data_root:
+  desc: null
+  value: ../dataset
+default_root_dir:
+  desc: null
+  value: None
+deterministic:
+  desc: null
+  value: false
+distributed_backend:
+  desc: null
+  value: None
+enable_pl_optimizer:
+  desc: null
+  value: None
+fast_dev_run:
+  desc: null
+  value: false
+flush_logs_every_n_steps:
+  desc: null
+  value: 100
+gpus:
+  desc: null
+  value: 1
+gradient_clip_val:
+  desc: null
+  value: 0
+is_pseudo:
+  desc: null
+  value: false
+limit_predict_batches:
+  desc: null
+  value: 1.0
+limit_test_batches:
+  desc: null
+  value: 1.0
+limit_train_batches:
+  desc: null
+  value: 1.0
+limit_val_batches:
+  desc: null
+  value: 1.0
+log_dir:
+  desc: null
+  value: ../logs/p1
+log_every_n_steps:
+  desc: null
+  value: 50
+log_gpu_memory:
+  desc: null
+  value: None
+logger:
+  desc: null
+  value: true
+logger_type:
+  desc: null
+  value: wandb
+max_epochs:
+  desc: null
+  value: 100
+max_lr:
+  desc: null
+  value: 0.0003
+max_steps:
+  desc: null
+  value: None
+min_epochs:
+  desc: null
+  value: None
+min_lr:
+  desc: null
+  value: 0.001
+min_steps:
+  desc: null
+  value: None
+model:
+  desc: null
+  value: baseline
+momentum:
+  desc: null
+  value: 0.9
+move_metrics_to_cpu:
+  desc: null
+  value: false
+multiple_trainloader_mode:
+  desc: null
+  value: max_size_cycle
+num_nodes:
+  desc: null
+  value: 1
+num_processes:
+  desc: null
+  value: 1
+num_sanity_val_steps:
+  desc: null
+  value: 2
+num_workers:
+  desc: null
+  value: 2
+optimizer:
+  desc: null
+  value: adamw
+overfit_batches:
+  desc: null
+  value: 0.0
+plugins:
+  desc: null
+  value: None
+precision:
+  desc: null
+  value: 32
+prepare_data_per_node:
+  desc: null
+  value: true
+process_position:
+  desc: null
+  value: 0
+profiler:
+  desc: null
+  value: None
+progress_bar_refresh_rate:
+  desc: null
+  value: 20
+reload_dataloaders_every_epoch:
+  desc: null
+  value: false
+replace_sampler_ddp:
+  desc: null
+  value: true
+resize_pad:
+  desc: null
+  value: false
+resume_from_checkpoint:
+  desc: null
+  value: None
+save_checkpoint:
+  desc: null
+  value: true
+save_pred:
+  desc: null
+  value: ../predictions/
+seed:
+  desc: null
+  value: 42
+snapshot_size:
+  desc: null
+  value: 50
+stochastic_weight_avg:
+  desc: null
+  value: false
+sync_batchnorm:
+  desc: null
+  value: false
+terminate_on_nan:
+  desc: null
+  value: false
+tpu_cores:
+  desc: null
+  value: None
+track_grad_norm:
+  desc: null
+  value: -1
+truncated_bptt_steps:
+  desc: null
+  value: None
+val_check_interval:
+  desc: null
+  value: 1.0
+val_fold_idx:
+  desc: null
+  value: 0
+version:
+  desc: null
+  value: 0.1
+weight_decay:
+  desc: null
+  value: 0.0005
+weights_save_path:
+  desc: null
+  value: None
+weights_summary:
+  desc: null
+  value: top

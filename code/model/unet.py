@@ -231,9 +231,14 @@ class UNet(nn.Module):
         self.downs.append(Down(num_filter1 * 2**(num_down_stage - 1), num_filter1 * 2**num_down_stage // factor))
         self.downs = nn.Sequential(*self.downs)
 
-        self.ups = [Up(num_filter1 * 2**(num_down_stage - i) , num_filter1 * 2**(num_down_stage -1 - i) // factor, bilinear) for i in range(num_down_stage - 1)]
+        self.ups = []
+        # self.mid_scale_conv = []
+        for i in range(num_down_stage - 1):
+            self.ups.append(Up(num_filter1 * 2**(num_down_stage - i) , num_filter1 * 2**(num_down_stage -1 - i) // factor, bilinear))
+            # self.mid_scale_conv.append(nn.Conv2d(num_filter1 * 2**(num_down_stage -1 - i) // factor, n_classes, 1))
         self.ups.append(Up(num_filter1 * 2 , num_filter1 , bilinear))
         self.ups = nn.Sequential(*self.ups)
+        # self.mid_scale_conv = nn.Sequential(*self.mid_scale_conv)
         self.outc = OutConv(num_filter1, n_classes)
 
     def forward(self, x):
@@ -244,9 +249,11 @@ class UNet(nn.Module):
 
         # Upsampling path
         resample_block = feature_blocks[-1]
+        # mid_out = []
         for i, up_module in enumerate(self.ups):
             resample_block = up_module(resample_block, feature_blocks[-i-2])
-        
+            # if i < len(self.ups) - 1:
+            #     mid_out.append(self.mid_scale_conv[i](resample_block))
         # Segment
         logits = self.outc(resample_block)
         return logits

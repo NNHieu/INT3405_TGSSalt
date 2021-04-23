@@ -1,0 +1,26 @@
+{
+    "os": "Linux-5.8.0-50-generic-x86_64-with-glibc2.29",
+    "python": "3.8.6",
+    "heartbeatAt": "2021-04-23T15:15:51.857033",
+    "startedAt": "2021-04-23T15:15:50.224176",
+    "docker": null,
+    "gpu": "GeForce GTX 1070",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [
+        "-f",
+        "/home/user/.local/share/jupyter/runtime/kernel-7dd474e5-a249-4d4c-abf0-b46efa36c4dd.json"
+    ],
+    "state": "running",
+    "program": "notebooks/training/Stage1.ipynb",
+    "root": "/home/user/code",
+    "git": {
+        "remote": "git@github.com:NNHieu/INT3405_TGSSalt.git",
+        "commit": "6a82c0c42204bb125cea2818357eb74a12b0512e"
+    },
+    "email": "ngochieutb13@gmail.com",
+    "host": "cyan-MS-7972",
+    "username": "user",
+    "executable": "/python/bin/python3"
+}

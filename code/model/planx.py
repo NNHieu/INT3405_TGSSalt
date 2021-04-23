@@ -122,21 +122,19 @@ class Decoderv2(nn.Module):
 
         cat_p = torch.cat([up_p, x_p], 1)
         cat_p = self.relu(self.bn(cat_p))
-        # s = self.s_att(cat_p)
-        # c = self.c_att(cat_p)
-        # return s + c
-        return cat_p
+        s = self.s_att(cat_p)
+        c = self.c_att(cat_p)
+        return s + c
 
 
 class SCse(nn.Module):
     def __init__(self, dim):
         super(SCse, self).__init__()
-        # self.satt = SpatialAttention2d(dim)
-        # self.catt = GAB(dim)
+        self.satt = SpatialAttention2d(dim)
+        self.catt = GAB(dim)
 
     def forward(self, x):
-        # return self.satt(x) + self.catt(x)
-        return x
+        return self.satt(x) + self.catt(x)
 
 
 # stage1 model
@@ -190,10 +188,10 @@ class Res34Unetv4(nn.Module):
         d1 = self.decode1(d2)  # 64, 256, 256
 
         f = torch.cat((d1,
-                       F.interpolate(d2, scale_factor=2, mode='bilinear', align_corners=True),
-                       F.interpolate(d3, scale_factor=4, mode='bilinear', align_corners=True),
-                       F.interpolate(d4, scale_factor=8, mode='bilinear', align_corners=True),
-                       F.interpolate(d5, scale_factor=16, mode='bilinear', align_corners=True)), 1)  # 320, 256, 256
+                       F.upsample(d2, scale_factor=2, mode='bilinear', align_corners=True),
+                       F.upsample(d3, scale_factor=4, mode='bilinear', align_corners=True),
+                       F.upsample(d4, scale_factor=8, mode='bilinear', align_corners=True),
+                       F.upsample(d5, scale_factor=16, mode='bilinear', align_corners=True)), 1)  # 320, 256, 256
 
         logit = self.logit(f)  # 1, 256, 256
 
@@ -265,10 +263,10 @@ class Res34Unetv3(nn.Module):
         d1 = self.decode1(d2)  # 64, 256, 256
 
         f = torch.cat((d1,
-                       F.interpolate(d2, scale_factor=2, mode='bilinear', align_corners=True),
-                       F.interpolate(d3, scale_factor=4, mode='bilinear', align_corners=True),
-                       F.interpolate(d4, scale_factor=8, mode='bilinear', align_corners=True),
-                       F.interpolate(d5, scale_factor=16, mode='bilinear', align_corners=True)), 1)  # 320, 256, 256
+                       F.upsample(d2, scale_factor=2, mode='bilinear', align_corners=True),
+                       F.upsample(d3, scale_factor=4, mode='bilinear', align_corners=True),
+                       F.upsample(d4, scale_factor=8, mode='bilinear', align_corners=True),
+                       F.upsample(d5, scale_factor=16, mode='bilinear', align_corners=True)), 1)  # 320, 256, 256
         f = self.dropout2d(f)
 
         # segmentation process
@@ -281,7 +279,7 @@ class Res34Unetv3(nn.Module):
 
         # combine segmentation and classification
         fuse = torch.cat([fuse_pixel,
-                          F.interpolate(fuse_image.view(batch_size, -1, 1, 1), scale_factor=256, mode='bilinear',
+                          F.upsample(fuse_image.view(batch_size, -1, 1, 1), scale_factor=256, mode='bilinear',
                                      align_corners=True)], 1)  # 128, 256, 256
         logit = self.logit(fuse)  # 1, 256, 256
 
@@ -295,7 +293,7 @@ class Res34Unetv5(nn.Module):
         self.resnet = torchvision.models.resnet34(False)
 
         self.conv1 = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=3, padding=1, bias=False),
+            nn.Conv2d(3, 64, kernel_size=3, padding=1, bias=False),
             self.resnet.bn1,
             self.resnet.relu)
 
@@ -316,7 +314,7 @@ class Res34Unetv5(nn.Module):
         self.decode3 = Decoderv2(64, 128, 64)
         self.decode2 = Decoderv2(64, 64, 64)
 
-        self.logit = nn.Sequential(nn.Conv2d(64, 32, kernel_size=3, padding=1),
+        self.logit = nn.Sequential(nn.Conv2d(256, 32, kernel_size=3, padding=1),
                                    nn.ELU(True),
                                    nn.Conv2d(32, 1, kernel_size=1, bias=False))
 
@@ -335,11 +333,10 @@ class Res34Unetv5(nn.Module):
         d3 = self.decode3(d4, e3)  # 64, 64, 64
         d2 = self.decode2(d3, e2)  # 64, 128, 128
 
-        f = d2
-        # f = torch.cat((d2,
-        #                F.interpolate(d3, scale_factor=2, mode='bilinear', align_corners=True),
-        #                F.interpolate(d4, scale_factor=4, mode='bilinear', align_corners=True),
-        #                F.interpolate(d5, scale_factor=8, mode='bilinear', align_corners=True)), 1)  # 256, 128, 128
+        f = torch.cat((d2,
+                       F.upsample(d3, scale_factor=2, mode='bilinear', align_corners=True),
+                       F.upsample(d4, scale_factor=4, mode='bilinear', align_corners=True),
+                       F.upsample(d5, scale_factor=8, mode='bilinear', align_corners=True)), 1)  # 256, 128, 128
 
         f = F.dropout2d(f, p=0.4)
         logit = self.logit(f)  # 1, 128, 128

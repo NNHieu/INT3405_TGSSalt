@@ -1,0 +1,110 @@
+2021-04-22 01:01:32,357 INFO    MainThread:316732 [wandb_setup.py:_flush():69] setting env: {}
+2021-04-22 01:01:32,357 INFO    MainThread:316732 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-04-22 01:01:32,357 INFO    MainThread:316732 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-04-22 01:01:32,357 INFO    MainThread:316732 [wandb_init.py:_log_setup():336] Logging user logs to ../logs/stage1/wandb/run-20210422_010132-0_1/logs/debug.log
+2021-04-22 01:01:32,357 INFO    MainThread:316732 [wandb_init.py:_log_setup():337] Logging internal logs to ../logs/stage1/wandb/run-20210422_010132-0_1/logs/debug-internal.log
+2021-04-22 01:01:32,358 INFO    MainThread:316732 [wandb_init.py:_jupyter_setup():287] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x7f376d8142e0>
+2021-04-22 01:01:32,358 INFO    MainThread:316732 [wandb_init.py:init():369] calling init triggers
+2021-04-22 01:01:32,358 INFO    MainThread:316732 [wandb_init.py:init():374] wandb.init called with sweep_config: {}
+config: {}
+2021-04-22 01:01:32,358 INFO    MainThread:316732 [wandb_init.py:init():418] starting backend
+2021-04-22 01:01:32,358 INFO    MainThread:316732 [backend.py:_multiprocessing_setup():69] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-04-22 01:01:32,380 INFO    MainThread:316732 [backend.py:ensure_launched():123] starting backend process...
+2021-04-22 01:01:32,400 INFO    MainThread:316732 [backend.py:ensure_launched():127] started backend process with pid: 316829
+2021-04-22 01:01:32,401 INFO    MainThread:316732 [wandb_init.py:init():423] backend started and connected
+2021-04-22 01:01:32,419 INFO    MainThread:316732 [wandb_init.py:init():465] updated telemetry
+2021-04-22 01:01:32,420 INFO    MainThread:316732 [wandb_init.py:init():484] communicating current version
+2021-04-22 01:01:32,957 INFO    MainThread:316732 [wandb_init.py:init():489] got version response 
+2021-04-22 01:01:32,957 INFO    MainThread:316732 [wandb_init.py:init():497] communicating run to backend with 30 second timeout
+2021-04-22 01:01:33,928 INFO    MainThread:316732 [wandb_init.py:init():517] run resumed
+2021-04-22 01:01:33,931 INFO    MainThread:316732 [wandb_init.py:init():522] starting run threads in backend
+2021-04-22 01:01:33,994 INFO    MainThread:316732 [wandb_run.py:_console_start():1524] atexit reg
+2021-04-22 01:01:33,995 INFO    MainThread:316732 [wandb_run.py:_redirect():1371] redirect: SettingsConsole.WRAP
+2021-04-22 01:01:33,995 INFO    MainThread:316732 [wandb_run.py:_redirect():1414] Wrapping output streams.
+2021-04-22 01:01:33,995 INFO    MainThread:316732 [wandb_run.py:_redirect():1438] Redirects installed.
+2021-04-22 01:01:33,995 INFO    MainThread:316732 [wandb_init.py:init():546] run started, returning control to user process
+2021-04-22 01:01:33,997 INFO    MainThread:316732 [wandb_run.py:_config_callback():749] config_cb None None {'seed': 42, 'version': 1, 'log_dir': '../logs/stage1', 'data_root': '../dataset', 'num_workers': 2, 'batch_size': 16, 'is_pseudo': False, 'val_fold_idx': 0, 'add_depth': True, 'resize_pad': True, 'logger': True, 'checkpoint_callback': True, 'default_root_dir': 'None', 'gradient_clip_val': 0, 'process_position': 0, 'num_nodes': 1, 'num_processes': 1, 'gpus': 1, 'auto_select_gpus': False, 'tpu_cores': 'None', 'log_gpu_memory': 'None', 'progress_bar_refresh_rate': 20, 'overfit_batches': 0.0, 'track_grad_norm': -1, 'check_val_every_n_epoch': 1, 'fast_dev_run': False, 'accumulate_grad_batches': 1, 'max_epochs': 100, 'min_epochs': 'None', 'max_steps': 'None', 'min_steps': 'None', 'limit_train_batches': 1.0, 'limit_val_batches': 1.0, 'limit_test_batches': 1.0, 'limit_predict_batches': 1.0, 'val_check_interval': 1.0, 'flush_logs_every_n_steps': 100, 'log_every_n_steps': 50, 'accelerator': 'None', 'sync_batchnorm': False, 'precision': 32, 'weights_summary': 'top', 'weights_save_path': 'None', 'num_sanity_val_steps': 2, 'truncated_bptt_steps': 'None', 'resume_from_checkpoint': 'None', 'profiler': 'None', 'benchmark': False, 'deterministic': False, 'reload_dataloaders_every_epoch': False, 'auto_lr_find': False, 'replace_sampler_ddp': True, 'terminate_on_nan': False, 'auto_scale_batch_size': False, 'prepare_data_per_node': True, 'plugins': 'None', 'amp_backend': 'native', 'amp_level': 'O2', 'distributed_backend': 'None', 'automatic_optimization': 'None', 'move_metrics_to_cpu': False, 'enable_pl_optimizer': 'None', 'multiple_trainloader_mode': 'max_size_cycle', 'stochastic_weight_avg': False, 'model': 'phalanx_res34v4', 'snapshot_size': 50, 'max_lr': 0.012, 'min_lr': 0.001, 'momentum': 0.9, 'weight_decay': 0.0001, 'save_pred': '../predictions/'}
+2021-04-22 01:01:37,918 INFO    MainThread:316732 [wandb_init.py:_pause_backend():249] pausing backend
+2021-04-22 01:01:37,918 INFO    MainThread:316732 [jupyter.py:save_ipynb():265] not saving jupyter notebook
+2021-04-22 01:01:44,619 INFO    MainThread:316732 [wandb_run.py:_atexit_cleanup():1494] got exitcode: 0
+2021-04-22 01:01:44,619 INFO    MainThread:316732 [wandb_run.py:_restore():1466] restore
+2021-04-22 01:01:45,128 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 804
+  total_bytes: 804
+}
+
+2021-04-22 01:01:45,950 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 804
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,237 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 804
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,341 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 804
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,443 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 804
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,547 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 6657
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,653 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 6753
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,758 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 6753
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,861 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 6753
+  total_bytes: 6753
+}
+
+2021-04-22 01:01:46,964 INFO    MainThread:316732 [wandb_run.py:_wait_for_finish():1616] got exit ret: file_counts {
+  wandb_count: 5
+}
+pusher_stats {
+  uploaded_bytes: 6753
+  total_bytes: 6753
+}
+
