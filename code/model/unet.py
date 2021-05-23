@@ -1,21 +1,28 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from .activation import Mish
 
 class DoubleConv(nn.Module):
     """(convolution => [BN] => ReLU) * 2"""
 
-    def __init__(self, in_channels, out_channels, mid_channels=None):
+    def __init__(self, in_channels, out_channels, mid_channels=None, activation='relu'):
         super().__init__()
+        
+        if activation == 'relu':
+            act = nn.ReLU(inplace=False)
+        elif activation == 'mish':
+            act = Mish()
+
         if not mid_channels:
             mid_channels = out_channels
         self.double_conv = nn.Sequential(
             nn.Conv2d(in_channels, mid_channels, kernel_size=3, padding=1),
             nn.BatchNorm2d(mid_channels),
-            nn.ReLU(inplace=True),
+            act,
             nn.Conv2d(mid_channels, out_channels, kernel_size=3, padding=1),
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True)
+            act
         )
 
     def forward(self, x):
@@ -25,11 +32,11 @@ class DoubleConv(nn.Module):
 class Down(nn.Module):
     """Downscaling with maxpool then double conv"""
 
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels, activation='relu'):
         super().__init__()
         self.maxpool_conv = nn.Sequential(
             nn.MaxPool2d(2),
-            DoubleConv(in_channels, out_channels)
+            DoubleConv(in_channels, out_channels, activation=activation)
         )
 
     def forward(self, x):
@@ -52,17 +59,17 @@ class Down(nn.Module):
 class Up(nn.Module):
     """Upscaling then double conv"""
 
-    def __init__(self, in_channels, out_channels, bilinear=True, concat=True):
+    def __init__(self, in_channels, out_channels, bilinear=True, concat=True, activation='relu'):
         super().__init__()
         self.concat = concat
         factor = 1 if self.concat else 2
         # if bilinear, use the normal convolutions to reduce the number of channels
         if bilinear:
             self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
-            self.conv = DoubleConv(in_channels // factor, out_channels, in_channels // factor)
+            self.conv = DoubleConv(in_channels // factor, out_channels, in_channels // 2, activation=activation)
         else:
             self.up = nn.ConvTranspose2d(in_channels , in_channels // 2, kernel_size=2, stride=2)
-            self.conv = DoubleConv(in_channels // factor, out_channels)
+            self.conv = DoubleConv(in_channels // factor, out_channels, activation=activation)
 
 
     def forward(self, x1, x2=None):
@@ -83,34 +90,34 @@ class Up(nn.Module):
             x = x1
         return self.conv(x)
     
-# class RUp(nn.Module):
-#     """Upscaling then double conv"""
+class RUp(nn.Module):
+    """Upscaling then double conv"""
 
-#     def __init__(self, in_channels, out_channels, bilinear=True):
-#         super().__init__()
+    def __init__(self, in_channels, out_channels, bilinear=True):
+        super().__init__()
 
-#         # if bilinear, use the normal convolutions to reduce the number of channels
-#         if bilinear:
-#             self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
-#             self.conv = ResidualBlock(in_channels, out_channels, in_channels // 2)
-#         else:
-#             self.up = nn.ConvTranspose2d(in_channels , in_channels // 2, kernel_size=2, stride=2)
-#             self.conv = ResidualBlock(in_channels, out_channels)
+        # if bilinear, use the normal convolutions to reduce the number of channels
+        if bilinear:
+            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+            self.conv = ResidualBlock(in_channels, out_channels, in_channels // 2)
+        else:
+            self.up = nn.ConvTranspose2d(in_channels , in_channels // 2, kernel_size=2, stride=2)
+            self.conv = ResidualBlock(in_channels, out_channels)
 
 
-#     def forward(self, x1, x2):
-#         x1 = self.up(x1)
-#         # input is CHW
-#         diffY = x2.size()[2] - x1.size()[2]
-#         diffX = x2.size()[3] - x1.size()[3]
+    def forward(self, x1, x2):
+        x1 = self.up(x1)
+        # input is CHW
+        diffY = x2.size()[2] - x1.size()[2]
+        diffX = x2.size()[3] - x1.size()[3]
 
-#         x1 = F.pad(x1, [diffX // 2, diffX - diffX // 2,
-#                         diffY // 2, diffY - diffY // 2])
-#         # if you have padding issues, see
-#         # https://github.com/HaiyongJiang/U-Net-Pytorch-Unstructured-Buggy/commit/0e854509c2cea854e247a9c615f175f76fbb2e3a
-#         # https://github.com/xiaopeng-liao/Pytorch-UNet/commit/8ebac70e633bac59fc22bb5195e513d5832fb3bd
-#         x = torch.cat([x2, x1], dim=1)
-#         return self.conv(x)
+        x1 = F.pad(x1, [diffX // 2, diffX - diffX // 2,
+                        diffY // 2, diffY - diffY // 2])
+        # if you have padding issues, see
+        # https://github.com/HaiyongJiang/U-Net-Pytorch-Unstructured-Buggy/commit/0e854509c2cea854e247a9c615f175f76fbb2e3a
+        # https://github.com/xiaopeng-liao/Pytorch-UNet/commit/8ebac70e633bac59fc22bb5195e513d5832fb3bd
+        x = torch.cat([x2, x1], dim=1)
+        return self.conv(x)
 
 # class AttUp(nn.Module):
 #     """Upscaling then double conv"""
@@ -219,24 +226,24 @@ class OutConv(nn.Module):
 #         return logits
 
 class UNet(nn.Module):
-    def __init__(self, n_channels, n_classes, num_filter1, num_down_stage, bilinear=True):
+    def __init__(self, n_channels, n_classes, num_filter1, num_down_stage, bilinear=True, activation='relu'):
         super(UNet, self).__init__()
         self.n_channels = n_channels
         self.n_classes = n_classes
         self.bilinear = bilinear
 
-        self.inc = DoubleConv(n_channels, num_filter1)
-        self.downs = [Down(num_filter1 * 2**i, num_filter1 * 2**(i + 1)) for i in range(num_down_stage - 1)]
+        self.inc = DoubleConv(n_channels, num_filter1, activation=activation)
+        self.downs = [Down(num_filter1 * 2**i, num_filter1 * 2**(i + 1), activation=activation) for i in range(num_down_stage - 1)]
         factor = 2 if bilinear else 1 # do bilinear khong half num feature
-        self.downs.append(Down(num_filter1 * 2**(num_down_stage - 1), num_filter1 * 2**num_down_stage // factor))
+        self.downs.append(Down(num_filter1 * 2**(num_down_stage - 1), num_filter1 * 2**num_down_stage // factor, activation=activation))
         self.downs = nn.Sequential(*self.downs)
 
         self.ups = []
         # self.mid_scale_conv = []
         for i in range(num_down_stage - 1):
-            self.ups.append(Up(num_filter1 * 2**(num_down_stage - i) , num_filter1 * 2**(num_down_stage -1 - i) // factor, bilinear))
+            self.ups.append(Up(num_filter1 * 2**(num_down_stage - i) , num_filter1 * 2**(num_down_stage -1 - i) // factor, bilinear, activation=activation))
             # self.mid_scale_conv.append(nn.Conv2d(num_filter1 * 2**(num_down_stage -1 - i) // factor, n_classes, 1))
-        self.ups.append(Up(num_filter1 * 2 , num_filter1 , bilinear))
+        self.ups.append(Up(num_filter1 * 2 , num_filter1 , bilinear, activation=activation))
         self.ups = nn.Sequential(*self.ups)
         # self.mid_scale_conv = nn.Sequential(*self.mid_scale_conv)
         self.outc = OutConv(num_filter1, n_classes)
@@ -257,7 +264,9 @@ class UNet(nn.Module):
         # Segment
         logits = self.outc(resample_block)
         return logits
-    
+
+
+
 # class RUNet(nn.Module):
 #     def __init__(self, n_channels, n_classes, bilinear=True):
 #         super(RUNet, self).__init__()

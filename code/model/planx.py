@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
+from .activation import Mish
 
 
 class FPAv2(nn.Module):
@@ -12,26 +13,26 @@ class FPAv2(nn.Module):
 
         self.down2_1 = nn.Sequential(nn.Conv2d(input_dim, input_dim, kernel_size=5, stride=2, padding=2, bias=False),
                                      nn.BatchNorm2d(input_dim),
-                                     nn.ELU(True))
+                                     Mish())
         self.down2_2 = nn.Sequential(nn.Conv2d(input_dim, output_dim, kernel_size=5, padding=2, bias=False),
                                      nn.BatchNorm2d(output_dim),
-                                     nn.ELU(True))
+                                     Mish())
 
         self.down3_1 = nn.Sequential(nn.Conv2d(input_dim, input_dim, kernel_size=3, stride=2, padding=1, bias=False),
                                      nn.BatchNorm2d(input_dim),
-                                     nn.ELU(True))
+                                     Mish())
         self.down3_2 = nn.Sequential(nn.Conv2d(input_dim, output_dim, kernel_size=3, padding=1, bias=False),
                                      nn.BatchNorm2d(output_dim),
-                                     nn.ELU(True))
+                                     Mish())
 
         self.conv1 = nn.Sequential(nn.Conv2d(input_dim, output_dim, kernel_size=1, bias=False),
                                    nn.BatchNorm2d(output_dim),
-                                   nn.ELU(True))
+                                   Mish())
 
     def forward(self, x):
         # x shape: 512, 16, 16
         x_glob = self.glob(x)  # 256, 1, 1
-        x_glob = F.upsample(x_glob, scale_factor=16, mode='bilinear', align_corners=True)  # 256, 16, 16
+        x_glob = F.upsample(x_glob, scale_factor=8, mode='bilinear', align_corners=True)  # 256, 16, 16
 
         d2 = self.down2_1(x)  # 512, 8, 8
         d3 = self.down3_1(d2)  # 512, 4, 4
@@ -147,6 +148,7 @@ class Res34Unetv4(nn.Module):
             self.resnet.conv1,
             self.resnet.bn1,
             self.resnet.relu)
+        
 
         self.encode2 = nn.Sequential(self.resnet.layer1,
                                      SCse(64))

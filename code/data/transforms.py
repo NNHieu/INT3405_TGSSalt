@@ -76,22 +76,34 @@ class TGSTransform:
             self.augtrans = A.HorizontalFlip(p=0.5)
         elif augment_strategy == 2:
             self.augtrans = A.augmentations.transforms.Flip(p=0.5)
+        elif augment_strategy == 3:
+            self.augtrans = A.Compose([
+                A.HorizontalFlip(p=0.5),
+                HShear((-0.12, 0.12), p=0.5),
+            ], p=1.0)
+        elif augment_strategy == 4:
+            self.augtrans = A.Compose([
+                A.HorizontalFlip(p=0.5),
+                A.ShiftScaleRotate(shift_limit=0.1, scale_limit=(-0.2, 0.1), rotate_limit=10, border_mode=cv2.BORDER_CONSTANT, value=0, mask_value=0, p=0.5),
+            ], p=1.0)
+        elif augment_strategy == 5:
+            self.augtrans = A.Compose([
+                A.HorizontalFlip(p=0.5),
+                A.RandomBrightnessContrast(brightness_limit=0.4, contrast_limit=0.4, p=0.5),
+            ], p=1.0)
+        elif augment_strategy == 6:
+            self.augtrans = A.Compose([
+                A.HorizontalFlip(p=0.5),
+                A.OneOf([
+                    A.ShiftScaleRotate(scale_limit=0., rotate_limit=10),
+                    HShear((-0.07, 0.07)),
+                ], p=0.3),
+                # A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.3),
+            ])
         else:
             raise ValueError()
 
-        # self.augtrans = A.Compose([
-        #     A.HorizontalFlip(p=0.5),
-        #     A.OneOf([
-        #         A.RandomResizedCrop(width=image_orig_size[0], height=image_orig_size[1], p=1.0),
-        #         HShear((-0.07, 0.07), p=1.0),
-        #         A.Rotate(limit=(0, 15), p=1.0),
-        #     ], p=0.5),
-        #     A.OneOf([
-        #         # A.augmentations.transforms.MultiplicativeNoise((1 - 0.08, 1 + 0.08), p=0.5),
-        #         # A.augmentations.transforms.Add
-        #     ]),
-        #     A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.08, p=0.5)
-        # ])
+        
         if resize_pad:
             self.alb_trans = A.Compose([self.augtrans, 
                                         A.Resize(202, 202), 

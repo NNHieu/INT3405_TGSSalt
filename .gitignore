@@ -5,3 +5,7 @@ __pycache__/
 /params/*
 !/params/.gitkeep
 /predictions
+/logs
+!logs/exp/wandb/.gitkeep
+/submission
+/code/lightning_logs

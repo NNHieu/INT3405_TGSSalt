@@ -2,8 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import init
+
+from model.activation import Mish
 from .pool import *
-from .att import *
+# from .att import *
 from .layer import *
 
 class ResidualBlock(nn.Module):
@@ -154,3 +156,4 @@ class PoolCAttUp(nn.Module):
         if not self.bilinear:
             o2 = self.add_norm_1(o1 + o2)
         return o2
+    

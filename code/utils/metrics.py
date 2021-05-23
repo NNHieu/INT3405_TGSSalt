@@ -1,13 +1,13 @@
 import numpy as np
 import torch
 
-def cal_mAP(predict,truth, threshold=0.5):
+def cal_mAP(predict,truth, pred_threshold=0.5):
 
     # N = len(predict)
     # predict = predict.view(N,-1)
     # truth   = truth.view(N,-1)
 
-    predict = predict>threshold
+    predict = predict>pred_threshold
     truth   = truth>0.5
     intersection = truth & predict # Intersection
     union        = truth | predict # Union
