@@ -162,13 +162,13 @@ class ResetSnapshotCB(Callback):
 
     def on_train_epoch_start(self, trainer, pl_module):
         # print('Check', trainer.current_epoch)
-        if trainer.current_epoch > 0 and (trainer.current_epoch + 1) % pl_module.hparams.snapshot_size == 0:
-            trainer.optimizers[0].param_groups[0]['initial_lr'] /= 3
-            trainer.optimizers[0].param_groups[0]['lr'] /= 3
-            trainer.optimizers[0].param_groups[1]['initial_lr'] /= 3
-            trainer.optimizers[0].param_groups[1]['lr'] /= 3
-            init_lr = trainer.optimizers[0].param_groups[0]['initial_lr']
-            trainer.lr_schedulers[0]['scheduler'].base_lrs = [init_lr, init_lr]
+        # if trainer.current_epoch > 0 and (trainer.current_epoch + 1) % pl_module.hparams.snapshot_size == 0:
+        #     trainer.optimizers[0].param_groups[0]['initial_lr'] /= 3
+        #     trainer.optimizers[0].param_groups[0]['lr'] /= 3
+        #     trainer.optimizers[0].param_groups[1]['initial_lr'] /= 3
+        #     trainer.optimizers[0].param_groups[1]['lr'] /= 3
+        #     init_lr = trainer.optimizers[0].param_groups[0]['initial_lr']
+        #     trainer.lr_schedulers[0]['scheduler'].base_lrs = [init_lr, init_lr]
 
         if trainer.current_epoch > 0 and trainer.current_epoch % pl_module.hparams.snapshot_size == 0:
             print('Reset snapshot')

@@ -82,7 +82,7 @@ class DecoderBlock(nn.Module):
 class Decoder(nn.Module):
     def __init__(self, planes):
         super(Decoder, self).__init__()
-        self.dblocks = nn.Sequential(*AttDecoderBlock.build(planes))
+        self.dblocks = nn.Sequential(*AttDecoderBlock.build(planes)[:2], *DecoderBlock.build(planes)[2:])
         self.last_dblock = DecoderBlock(planes[0], planes[0] // 2, planes[0])
 
     def forward(self, center, *enc_feature_block):
